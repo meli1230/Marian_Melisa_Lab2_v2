@@ -10,7 +10,7 @@ using Marian_Melisa_Lab2.Models;
 
 namespace Marian_Melisa_Lab2.Pages.Books
 {
-    public class CreateModel : PageModel
+    public class CreateModel : BookCategoriesPageModel
     {
         private readonly Marian_Melisa_Lab2.Data.Marian_Melisa_Lab2Context _context;
 
@@ -23,15 +23,43 @@ namespace Marian_Melisa_Lab2.Pages.Books
         {
             ViewData["PublisherID"] = new SelectList(_context.Set<Publisher>(), "ID", "PublisherName");
             ViewData["AuthorID"] = new SelectList(_context.Set<Author>(), "ID", "FullName");
+
+
+            var book = new Book();
+            book.BookCategories = new List<BookCategory>();
+            PopulateAssignedCategoryData(_context, book);
             return Page();
         }
 
         [BindProperty]
-        public Book Book { get; set; } = default!;
+        public Book Book { get; set; }
 
         // For more information, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(string[] selectedCategories)
         {
+            var newBook = new Book();
+            if (selectedCategories != null)
+            {
+                newBook.BookCategories = new List<BookCategory>();
+                foreach (var cat in selectedCategories)
+                {
+                    var catToAdd = new BookCategory
+                    {
+                        CategoryID = int.Parse(cat)
+                    };
+                    newBook.BookCategories.Add(catToAdd);
+                }
+            }
+
+            Book.BookCategories = newBook.BookCategories;
+            _context.Book.Add(Book);
+            await _context.SaveChangesAsync();
+            return RedirectToPage("./Index");
+        }
+    }
+}
+/*
+
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -44,3 +72,4 @@ namespace Marian_Melisa_Lab2.Pages.Books
         }
     }
 }
+*/

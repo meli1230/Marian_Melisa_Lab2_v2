@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.Identity.Client;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Marian_Melisa_Lab2.Models
@@ -22,5 +23,6 @@ namespace Marian_Melisa_Lab2.Models
 
         public int? PublisherID { get; set; }
         public Publisher? Publisher { get; set; } //navigation property
+        public ICollection<BookCategory>? BookCategories { get; set; }
     }
 }
