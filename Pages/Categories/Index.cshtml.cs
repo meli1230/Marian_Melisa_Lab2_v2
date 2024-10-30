@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Marian_Melisa_Lab2.Data;
 using Marian_Melisa_Lab2.Models;
+using Marian_Melisa_Lab2.Models.ViewModels;
 
 namespace Marian_Melisa_Lab2.Pages.Categories
 {
@@ -21,9 +22,34 @@ namespace Marian_Melisa_Lab2.Pages.Categories
 
         public IList<Category> Category { get;set; } = default!;
 
-        public async Task OnGetAsync()
+        //Added to sort by category 
+        public CategoryIndexData CategoryData { get; set; }
+        public int CategoryID { get; set; }
+        public int BookID { get; set; }
+
+        public async Task OnGetAsync(int ? id, int? bookID)
         {
-            Category = await _context.Category.ToListAsync();
+            CategoryData = new CategoryIndexData();
+            CategoryData.Categories = await _context.Category
+                .Include(c => c.BookCategories)
+                    .ThenInclude(bc => bc.Book)
+                        .ThenInclude(b => b.Author)
+                .OrderBy(c => c.CategoryName)
+                .ToListAsync();
+
+            if(id != null)
+            {
+                CategoryID = id.Value;
+                Category category = CategoryData.Categories
+                    .Where(i => i.ID == id.Value).Single();
+                CategoryData.Books = category.BookCategories
+                    //not sure if this is the way to do it
+                    //see lab 4 step 4
+                    .Select(bc => bc.Book)
+                    .ToList();
+            }
+
+            //Category = await _context.Category.ToListAsync();
         }
     }
 }
