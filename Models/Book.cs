@@ -1,6 +1,7 @@
 ﻿using Microsoft.Identity.Client;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Cryptography.Pkcs;
 
 namespace Marian_Melisa_Lab2.Models
 {
@@ -23,6 +24,9 @@ namespace Marian_Melisa_Lab2.Models
 
         public int? PublisherID { get; set; }
         public Publisher? Publisher { get; set; } //navigation property
+
+        public int? BorrowingID { get; set; }
+        public Borrowing? Borrowing { get; set; }
         public ICollection<BookCategory>? BookCategories { get; set; }
     }
 }
