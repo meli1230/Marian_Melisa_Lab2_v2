@@ -43,13 +43,9 @@ namespace Marian_Melisa_Lab2.Pages.Categories
                 Category category = CategoryData.Categories
                     .Where(i => i.ID == id.Value).Single();
                 CategoryData.Books = category.BookCategories
-                    //not sure if this is the way to do it
-                    //see lab 4 step 4
                     .Select(bc => bc.Book)
                     .ToList();
             }
-
-            //Category = await _context.Category.ToListAsync();
         }
     }
 }
