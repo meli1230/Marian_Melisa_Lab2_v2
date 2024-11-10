@@ -36,8 +36,24 @@ namespace Marian_Melisa_Lab2.Pages.Borrowings
                 return NotFound();
             }
             Borrowing = borrowing;
-           ViewData["BookID"] = new SelectList(_context.Book, "ID", "ID");
-           ViewData["MemberID"] = new SelectList(_context.Member, "ID", "ID");
+
+            var books = _context.Book
+                .Select(b => new
+                {
+                    ID = b.ID,
+                    DisplayText = $"{b.Title} by {b.Author.FullName}"
+                })
+                .ToList();
+
+            ViewData["BookID"] = new SelectList(books, "ID", "DisplayText");
+
+            ViewData["MemberID"] = new SelectList(_context.Member, "ID", "FullName");
+
+
+            /*
+            ViewData["AuthorID"] = new SelectList(authorList, "ID", "FullName");
+            ViewData["PublisherID"] = new SelectList(_context.Publisher, "ID", "PublisherName");
+            */
             return Page();
         }
 
