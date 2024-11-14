@@ -10,6 +10,8 @@ namespace Marian_Melisa_Lab2.Models
         public int ID { get; set; }
 
         [Display(Name = "Book Title")]
+        [Required(ErrorMessage = "Titlul cartii este obligatoriu.")]
+        [StringLength(150, MinimumLength = 3, ErrorMessage ="Ttitlul trebuie sa aiba intre 3 si 150 de caractere")]
         public string Title { get; set; }
         //public string Author { get; set; }
         public int? AuthorID { get; set; }
